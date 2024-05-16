@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fill in the days of the current month
         for (let i = 1; i <= daysInMonth; i++) {
             const dayElement = document.createElement('div');
+            dayElement.classList.add('current-month');
             dayElement.textContent = ` ${i.toString().padStart(2, '0')}`;
             calendar.appendChild(dayElement);
         }

@@ -105,8 +105,16 @@ main {
     border: 1px solid #e0e0e0;
     padding: 10px;
     text-align: center;
+    
 }
-
+#calendar div:hover {
+    
+    background-color: #aad8ee;
+    transform : scale(1.1);
+    cursor: pointer;
+    
+    
+}
 #calendar .prev-month, #calendar .next-month {
     background-color: #e0e0e0;
     color: #515151;
@@ -115,3 +123,4 @@ main {
 .hidden > div {
     display: none;
 }
+
