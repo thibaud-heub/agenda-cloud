@@ -8,7 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextMonthButton = document.getElementById('next-month');
     const monthNameElement = document.getElementById('month-name');
 
+
     let currentDate = new Date();
+    let currentMonth = currentDate.getMonth();
 
     todayButton.addEventListener('click', showToday);
     weekButton.addEventListener('click', showWeek);
@@ -31,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         weekdays.classList.add('hidden');
         calendar.classList.add('full-height');
         calendar.innerHTML = `<div>Aujourd'hui : ${dayNames[(today.getDay() + 6) % 7]} ${today.getDate().toString().padStart(2, '0')}</div>`;
+        monElement.classList.toggle('style-change');
     }
 
     function showWeek() {
@@ -42,9 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < 7; i++) {
             const day = new Date(today.setDate(startOfWeek + i));
             const dayElement = document.createElement('div');
+            
             dayElement.textContent = `${day.getDate().toString().padStart(2, '0')}`;
             calendar.appendChild(dayElement);
         }
+        monElement.classList.toggle('style-change');
     }
 
     function showMonth() {
@@ -68,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const dayElement = document.createElement('div');
                 dayElement.classList.add('prev-month');
                 dayElement.textContent = `${prevMonthLastDay - i}`;
+                dayElement.setAttribute("id","cells")
                 calendar.appendChild(dayElement);
             }
         }
@@ -75,11 +81,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // Fill in the days of the current month
         for (let i = 1; i <= daysInMonth; i++) {
             const dayElement = document.createElement('div');
-            dayElement.classList.add('current-month');
-            dayElement.textContent = ` ${i.toString().padStart(2, '0')}`;
+            if (i === currentDate.getDate() && currentDate.getMonth() === currentMonth) {
+                dayElement.classList.add('today', 'current-month');
+                dayElement.textContent = `● ${i.toString().padStart(2, '0')}`;
+            } else {
+                dayElement.classList.add('current-month');
+                dayElement.textContent = `${i.toString().padStart(2, '0')}`;
+            }
+            dayElement.setAttribute("id","cells")
             calendar.appendChild(dayElement);
         }
-
+        
         // Fill in the days of the next month to complete the last week
         const totalCells = startDayOfWeek + daysInMonth;
         const nextMonthDays = 7 - (totalCells % 7);
@@ -88,6 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const dayElement = document.createElement('div');
                 dayElement.classList.add('next-month');
                 dayElement.textContent = `${i}`;
+                dayElement.setAttribute("id","cells")
                 calendar.appendChild(dayElement);
             }
         }
@@ -102,7 +115,22 @@ document.addEventListener('DOMContentLoaded', () => {
         currentDate.setMonth(currentDate.getMonth() + 1);
         showMonth();
     }
-
+    
     // Par défaut, afficher la vue du mois
-    showMonth();
+    showMonth();    
+
+
+
+    const profileIcon = document.getElementById('profile');
+    const controlPanel = document.getElementById('controlPanel');
+
+    profileIcon.addEventListener('click', () => {
+        controlPanel.style.display = controlPanel.style.display === 'block' ? 'none' : 'block';
+    });
+
+    document.addEventListener('click', (event) => {
+        if (!profileIcon.contains(event.target) && !controlPanel.contains(event.target)) {
+            controlPanel.style.display = 'none';
+        }
+    });
 });

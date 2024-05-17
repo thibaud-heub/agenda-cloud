@@ -105,22 +105,74 @@ main {
     border: 1px solid #e0e0e0;
     padding: 10px;
     text-align: center;
+    transition-duration: 500ms;
     
+}
+#cells:hover{
+    transform : scale(1.03);
 }
 #calendar div:hover {
-    
+    z-index: 4;
     background-color: #aad8ee;
-    transform : scale(1.1);
+
     cursor: pointer;
     
-    
 }
+
 #calendar .prev-month, #calendar .next-month {
     background-color: #e0e0e0;
     color: #515151;
 }
-
+#calendar .today {
+    
+    
+    border: 2px solid #959595;
+}
 .hidden > div {
     display: none;
 }
 
+#profile{
+    width: 2.5em;
+    filter: invert(0.9);
+    cursor: pointer;
+}
+
+/* styleAgenda.css */
+
+.control-panel {
+    display: none; /* Hidden by default */
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    z-index: 1000;
+    right: 10px; /* Adjust based on your layout */
+    top: 50px; /* Adjust based on your layout */
+}
+
+.control-panel ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.control-panel ul li {
+    padding: 10px 20px;
+    color: black;
+}
+
+.control-panel ul li a {
+    text-decoration: none;
+    color: black;
+}
+
+.profile-container {
+    position: relative;
+    display: inline-block;
+}
+.control-panel li:hover{
+    background-color: #4285f4;
+    color: white;
+    cursor: pointer;
+}
