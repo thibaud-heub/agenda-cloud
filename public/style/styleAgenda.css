@@ -178,6 +178,8 @@ main {
 }
 
 .popup-content button {
+    display: inline-block;
+    width: 100%;
     padding: 10px;
     background-color: #4285f4;
     color: white;
@@ -191,19 +193,45 @@ main {
     background-color: #357ae8;
 }
 
-.close_button {
-    position: absolute;
+#close_button {
+    background-color: rgb(216, 51, 51);
+    
+    justify-content: center;
     top: 10px;
-    right: 20px;
-    color: #aaa;
-    font-size: 24px;
-    font-weight: bold;
+    right: 200px;
+    color: #ffffff;
+    margin: 5px 0 0 0 ;
+    
+    cursor: pointer;
+    
+}
+.close_button {
+    
+    background-color: rgb(86, 84, 84);
+    padding: 3px 8px 3px 8px;
+    border-radius: 50px;
+    justify-self: right;
+    top: 10px;
+    right: 200px;
+    color: #ffffff;
+    margin: 5px 0 0 95% ;
+    
+    cursor: pointer;
+    transition: 500ms;
+    
+}
+.close_button:hover,
+.close_button:focus {
+    color: red;
+    background-color: #ccc;
+    text-decoration: none;
     cursor: pointer;
 }
 
-.close_button:hover,
-.close_button:focus {
-    color: black;
+
+#close_button:hover,
+#close_button:focus {
+    
     text-decoration: none;
     cursor: pointer;
 }
