@@ -105,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 calendar.appendChild(dayElement);
             }
         }
+        assignDayClickHandlers();
     }
 
     function showPrevMonth() {
@@ -134,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
             controlPanel.style.display = 'none';
         }
     });
-});
 
-var event_page_loaded = new Event("page_loaded");
-document.dispatchEvent(event_page_loaded);
+    var event_page_loaded = new Event("page_loaded");
+    document.dispatchEvent(event_page_loaded);
+});

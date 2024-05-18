@@ -1,5 +1,4 @@
 function openPopup(day) {
-    console.log(`openPopup called for day: ${day}`);
     const dateInput = document.getElementById('date');
     const today = new Date();
     const month = today.getMonth() + 1;
@@ -11,73 +10,54 @@ function openPopup(day) {
     eventPopup.style.display = 'block';
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM fully loaded and parsed');
-    const calendar = document.getElementById('calendar');
-    const eventPopup = document.getElementById('event_popup');  // Changed to match your HTML
-    const closeButton = document.querySelector('.close_button');
-    const eventForm = document.getElementById('eventForm');
+function assignDayClickHandlers() {
+    let currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    const lastDayOfMonth = new Date(year, month + 1, 0);
+    const daysInMonth = lastDayOfMonth.getDate();
 
-    closeButton.addEventListener('click', () => {
-        eventPopup.style.display = 'none';
-    });
-
-    window.addEventListener('click', (event) => {
-        if (event.target === eventPopup) {
-            eventPopup.style.display = 'none';
-        }
-    });
-
-    eventForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const title = eventForm.title.value;
-        const date = eventForm.date.value;
-        const time = eventForm.time.value;
-        const category = eventForm.category.value;
-        const description = eventForm.description.value;
-        const groupe = eventForm.groupe.value;
-
-        // Traitement de l'événement (ajouter à la base de données, afficher sur le calendrier, etc.)
-        console.log('Event added:', { title, date, time, category, description, groupe });
-
-        eventPopup.style.display = 'none';
-        eventForm.reset();
-    });
-
-    function attachEventListeners() {
-        console.log('Attaching event listeners to calendar days');
-        let currentDate = new Date();
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        const lastDayOfMonth = new Date(year, month + 1, 0);
-        const daysInMonth = lastDayOfMonth.getDate();
-        for (let i = 1; i <= daysInMonth; i++) {
-            let day_id = 'cells_' + i.toString();
-            var day_div = document.getElementById(day_id);
-            if (day_div) {
-                console.log(`Attaching event listener to day: ${i}`);
-                day_div.addEventListener('click', (function(day) {
-                    return function() {
-                        openPopup(day);
-                    };
-                })(i));
-            } else {
-                console.warn(`Element not found: ${day_id}`);
-            }
+    for (let i = 1; i <= daysInMonth; i++) {
+        let day_id = 'cells_' + i.toString();
+        var day_div = document.getElementById(day_id);
+        if (day_div) {
+            day_div.addEventListener('click', (function(day) {
+                return function() {
+                    openPopup(day);
+                };
+            })(i));
         }
     }
+}
 
-    // Call attachEventListeners directly after the month view is created
-    attachEventListeners();
-/*
-    // Override the showMonth function to attach event listeners after creating the calendar
-    const originalShowMonth = showMonth;
-    window.showMonth = function() {
-        originalShowMonth();
-        attachEventListeners();
-    };
+const closeButton = document.querySelector('.close_button');
+const eventForm = document.getElementById('eventForm');
+const eventPopup = document.getElementById('event_popup');
 
-    // Trigger the initial showMonth to set up the calendar
-    showMonth();
-*/
+closeButton.addEventListener('click', () => {
+    eventPopup.style.display = 'none';
 });
+
+window.addEventListener('click', (event) => {
+    if (event.target === eventPopup) {
+        eventPopup.style.display = 'none';
+    }
+});
+
+eventForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const title = eventForm.title.value;
+    const date = eventForm.date.value;
+    const time = eventForm.time.value;
+    const category = eventForm.category.value;
+    const description = eventForm.description.value;
+    const groupe = eventForm.groupe.value;
+
+    // Traitement de l'événement (ajouter à la base de données, afficher sur le calendrier, etc.)
+    console.log('Event added:', { title, date, time, category, description, groupe });
+
+    eventPopup.style.display = 'none';
+    eventForm.reset();
+});
+
+document.addEventListener('page_loaded', assignDayClickHandlers);
