@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const dayElement = document.createElement('div');
                 dayElement.classList.add('prev-month');
                 dayElement.textContent = `${prevMonthLastDay - i}`;
-                dayElement.setAttribute("id","cells")
+                dayElement.setAttribute("id","cells");
                 calendar.appendChild(dayElement);
             }
         }
@@ -88,7 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 dayElement.classList.add('current-month');
                 dayElement.textContent = `${i.toString().padStart(2, '0')}`;
             }
-            dayElement.setAttribute("id","cells")
+            let id_name = "cells_"+i.toString();
+            dayElement.setAttribute("id",id_name);
             calendar.appendChild(dayElement);
         }
         
@@ -100,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const dayElement = document.createElement('div');
                 dayElement.classList.add('next-month');
                 dayElement.textContent = `${i}`;
-                dayElement.setAttribute("id","cells")
+                dayElement.setAttribute("id","cells");
                 calendar.appendChild(dayElement);
             }
         }
@@ -134,3 +135,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+var event_page_loaded = new Event("page_loaded");
+document.dispatchEvent(event_page_loaded);

@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../style/styleAgenda.css">
     <link rel="icon" href="calendar.png">
     <script src="../scr/script.js" defer></script>
+    <script src="../scr/scriptAddEvent.js" defer></script>
 </head>
 <body>
     <header>
@@ -44,6 +45,37 @@
             <div>Dimanche</div>
         </div>
         <div id="calendar"></div>
+        <div id="event_popup" class="popup">
+            <div class="popup-content">
+                <span class="close_button">&times;</span>
+                <form id="eventForm">
+                    <label for="title">Titre:</label>
+                    <input type="text" id="title" name="title" required>
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" name="date" required>
+                    <label for="time">Heure:</label>
+                    <input type="time" id="time" name="time">
+                    <label for="category">Catégorie:</label>
+                    <select name="category" id="category">
+                        <option value="">--Choisir une catégorie--</option>
+                        <option value="ecole">Ecole</option>
+                        <option value="sport">Sport</option>
+                        <option value="new">+/Ajouter une catégorie</option>
+                    </select>
+                    <label for="description">Description:</label>
+                    <textarea id="description" name="description"></textarea>
+                    <label for="groupe">Membres:</label>
+                    <select name="groupe" id="groupe">
+                        <option value="">--Choisir un/des membre(s)--</option>
+                        <option value="zou">ZOU</option>
+                        <option value="ba">BA</option>
+                        <option value="new">+/Ajouter un membre</option>
+                    </select>
+                    <button type="submit">Ajouter</button>
+                </form>
+                <button id="close_button">Fermer</button>
+            </div>
+        </div>
     </main>
  
 </body>
