@@ -48,13 +48,13 @@ eventForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const title = eventForm.title.value;
     const date = eventForm.date.value;
-    const time = eventForm.time.value;
+    const start_time = eventForm.start_time.value;
+    const end_time = eventForm.end_time.value;
     const category = eventForm.category.value;
     const description = eventForm.description.value;
     const groupe = eventForm.groupe.value;
 
-    // Traitement de l'événement (ajouter à la base de données, afficher sur le calendrier, etc.)
-    console.log('Event added:', { title, date, time, category, description, groupe });
+    console.log('Event added:', { title, date, start_time, end_time, category, description, groupe });
 
     eventPopup.style.display = 'none';
     eventForm.reset();
