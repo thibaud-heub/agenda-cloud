@@ -4,6 +4,29 @@ const router = express.Router();
 
 const API_URL = 'https://example.com/api/'; 
 
+
+router.get('/', (req, res) => {
+    res.render('index'); 
+});
+
+router.get('/profile', (req, res) => {
+    
+    res.render('profile', {
+        title: 'Profil',
+        user: req.session.user 
+    });
+});
+
+router.get('/agenda', async (req, res) => {
+    try {
+        const response = await fetch(`${API_URL}event`, { method: 'GET' });
+        const events = await response.json();
+        res.render('agenda', { events }); // 'calendar' est le nom du fichier EJS pour le calendrier
+    } catch (error) {
+        res.status(500).send(error.toString());
+    }
+});
+
 // Fetch events
 router.get('/events', async (req, res) => {
     try {
