@@ -1,15 +1,16 @@
 var express = require('express');
 var router = express.Router();
 
+const mongoose = require('mongoose');
+
 
 
 ///// logique de base de données ////
-const userSchema = new Schema({
+const userSchema = new mongoose.Schema({
   firstName: String,
   lastName: String,
   mail: { type: String, unique: true, required: true },
   password: { type: String, required: true },
-  admin: Boolean
 });
 
 const User = mongoose.model('User', userSchema);
@@ -45,7 +46,6 @@ router.post('/login', async function(req, res) {
 
       if (user && await bcrypt.compare(password, user.password)) {
           req.session.userId = user._id;
-          req.session.isAdmin = user.admin;
           res.send('Connexion réussie');
       } else {
           res.status(401).send('Identifiants incorrects');
@@ -75,8 +75,7 @@ router.post('/register', async function(req, res) {
         lastname: lastName,
         mail: mail,
         password: hashedPassword,
-        admin: false
-    });
+      });
 
     // Sauvegarder l'utilisateur dans la base de données
     await newUser.save();
@@ -89,12 +88,11 @@ router.post('/register', async function(req, res) {
 });
 
 // Modification d'un utilisateur
-router.put('/user/:id', async function(req, res) {
+router.put('/:id', async function(req, res) {
   const { id } = req.params;
-  const { mail, password, firstName, lastName, admin } = req.body;
+  const { mail, password, firstName, lastName } = req.body;
 
   try {
-    // Créer l'objet de mise à jour basique sans inclure le champ admin
     const hashedPassword = await bcrypt.hash(password, 8);
     let updateData = {
         mail: mail,
@@ -102,11 +100,6 @@ router.put('/user/:id', async function(req, res) {
         firstname: firstName,
         lastname: lastName
     };
-
-    // Si l'utilisateur est un admin, ajouter le champ admin à l'objet de mise à jour
-    if (req.session.isAdmin) {
-        updateData.admin = admin;
-    }
 
     // Effectuer la mise à jour avec les données appropriées
     const user = await User.findByIdAndUpdate(id, updateData, { new: true });
@@ -122,7 +115,7 @@ router.put('/user/:id', async function(req, res) {
 });
 
 // Supprimer un utilisateur
-router.delete('/user/:id', async function(req, res) {
+router.delete('/:id', async function(req, res) {
   const { id } = req.params;
 
   try {
