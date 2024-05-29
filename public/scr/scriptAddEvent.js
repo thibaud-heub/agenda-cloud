@@ -13,14 +13,20 @@ function openPopup(day) {
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded and parsed');
+    const today = new Date();
     const calendar = document.getElementById('calendar');
     const eventPopup = document.getElementById('event_popup');  // Changed to match your HTML
     const closeButton = document.querySelector('.close_button');
     const eventForm = document.getElementById('eventForm');
+    const createEventButoon = document.getElementById('createEvent')
 
     closeButton.addEventListener('click', () => {
         eventPopup.style.display = 'none';
     });
+    createEventButoon.addEventListener('click', ()=> {
+
+        openPopup(today.getDate());
+    } ) 
 
     window.addEventListener('click', (event) => {
         if (event.target === eventPopup) {
