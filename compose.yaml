@@ -8,9 +8,19 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
-  server:
+  backend-users:
     build:
-      context: .
+      context: backend-users
+    environment:
+      NODE_ENV: production
+      MONGO_URI: mongodb://db:27017/agenda
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+  backend-events:
+    build:
+      context: backend-events
     environment:
       NODE_ENV: production
       MONGO_URI: mongodb://db:27017/agenda
