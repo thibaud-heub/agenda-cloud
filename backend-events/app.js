@@ -25,8 +25,11 @@ app.use(cookieSession({
 }));
 
 app.use(function (req, res, next) {
-    if (req.session.userId) next();
-    else res.status(401).send('Unauthorized');
+    if (req.session.userId) {
+        next();
+    } else {
+        res.status(401).send('Unauthorized');
+    }
 })
 
 // Routes
