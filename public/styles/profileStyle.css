@@ -39,7 +39,9 @@ header nav button:hover {
 
 .profile-section {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template: 
+            "b a a" auto
+            "d c c" auto  ;
     gap: 20px;
     padding: 20px;
     max-width: 800px;
@@ -52,10 +54,9 @@ header nav button:hover {
 .profile-info {
     display: flex;
     flex-direction: column;
-    align-items: center;
 }
-
-.profile-info img {
+#profile-pic{
+    grid-area: d;
     width: 150px;
     height: 150px;
     border-radius: 50%;
@@ -63,9 +64,17 @@ header nav button:hover {
 }
 
 .profile-details {
+    grid-area: c;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+}
+
+.profile-addinfo {
+    justify-self: center;
+    grid-area: a;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .profile-details p {
@@ -79,11 +88,14 @@ header nav button:hover {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    align-self: flex-start;
 }
 
 .profile-details button:hover {
     background-color: #5a8cdd;
+}
+h2{
+    grid-area: b;
+
 }
 
 .popup {
@@ -176,4 +188,8 @@ button[type="submit"]:hover {
 .control-panel ul li a {
     text-decoration: none;
     color: black;
+}
+
+main{
+    display: flex;
 }
