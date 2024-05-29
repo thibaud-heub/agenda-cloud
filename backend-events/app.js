@@ -24,10 +24,10 @@ app.use(cookieSession({
     maxAge: 24 * 60 * 60 * 1000
 }));
 
-// app.use(function (req, res, next) {
-//     if (req.session.userId) next();
-//     else res.status(401).send('Unauthorized');
-// })
+app.use(function (req, res, next) {
+    if (req.session.userId) next();
+    else res.status(401).send('Unauthorized');
+})
 
 // Routes
 app.use('/categories', categoryRoutes);
