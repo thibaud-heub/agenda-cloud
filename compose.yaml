@@ -8,6 +8,16 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
+  front:
+    build:
+      context: front
+    environment:
+      NODE_ENV: production
+    ports:
+      - 5000:5000
+    depends_on:
+      - backend-users
+      - backend-events
   backend-users:
     build:
       context: backend-users
