@@ -23,6 +23,40 @@ router.get('/users/:id', async (req, res) => {
         res.status(500).json({ error: 'Erreur serveur interne' });
     }
 });
+router.put('/users/:id', async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const groupsIds = req.body.groupsIds;
+        const response = await axios.put(`${USERS_API}/users/${userId}`, { groupsIds });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error updating user groups:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+// Route de connexion
+router.post('/login', async (req, res) => {
+    try {
+        const response = await axios.post(`${USERS_API}/users/login`, req.body);
+        // Vous pouvez ici traiter la réponse, comme l'enregistrement des données de session
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).json({ error: 'Erreur lors de la connexion' });
+    }
+});
+
+// Route d'inscription
+router.post('/signup', async (req, res) => {
+    try {
+        const response = await axios.post(`${USERS_API}/users`, req.body);
+        // Traitement après inscription, par exemple envoi d'un email de confirmation
+        res.status(response.status).json(response.data);
+    } catch (error) {
+        console.error('Error during registration:', error);
+        res.status(500).json({ error: 'Erreur lors de l’inscription' });
+    }
+});
 
 // Proxy pour les événements
 router.get('/categories', async (req, res) => {
@@ -34,6 +68,50 @@ router.get('/categories', async (req, res) => {
         res.status(500).json({ error: 'Erreur serveur interne' });
     }
 });
+
+router.post('/rooms', async (req, res) => {
+    try {
+        const { name } = req.body;
+        const response = await axios.post(`${EVENTS_API}/rooms`, { name });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error creating room:', error);
+        res.status(500).json({ error: 'Erreur serveur interne lors de la création de la room' });
+    }
+});
+
+router.post('/groups', async (req, res) => {
+    try {
+        const { name } = req.body;
+        const response = await axios.post(`${EVENTS_API}/groups`, { name });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error creating group:', error);
+        res.status(500).json({ error: 'Erreur serveur interne lors de la création du groupe' });
+    }
+});
+
+async function fetchAdminData(req, res, next) {
+    try {
+        const usersResponse = await axios.get(`${USERS_API}/users`);
+        const groupsResponse = await axios.get(`${EVENTS_API}/groups`);
+        const roomsResponse = await axios.get(`${EVENTS_API}/rooms`);
+        
+        if (usersResponse.status === 200 && groupsResponse.status === 200 && roomsResponse.status === 200) {
+            req.adminData = {
+                users: usersResponse.data,
+                groups: groupsResponse.data,
+                rooms: roomsResponse.data
+            };
+            next();
+        } else {
+            throw new Error('Failed to fetch data');
+        }
+    } catch (error) {
+        console.error('Failed to fetch admin data:', error);
+        res.status(500).json({ error: 'Internal server error while fetching admin data' });
+    }
+}
 
 router.get('/groups', async (req, res) => {
     try {
@@ -104,5 +182,7 @@ router.post('/events', async (req, res) => {
     }
 });
 
-
-module.exports = router;
+module.exports = {
+    router,
+    fetchAdminData  
+};

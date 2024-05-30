@@ -1,7 +1,10 @@
 const express = require('express');
 const app = express();
 const port = 5000;
-const routeHandler = require('./routeshandler'); 
+const { router: routeHandler, fetchAdminData } = require('./routeshandler');
+
+
+
 app.use(express.json());
 app.use('/api', routeHandler);
 
@@ -17,6 +20,16 @@ app.get('/', (req, res) => {
 });
 app.get('/agenda', (req, res) => {
     res.render('agenda'); 
+});
+
+
+app.get('/admin', fetchAdminData, (req, res) => {
+
+    res.render('admin', {
+        users: req.adminData.users,
+        groups: req.adminData.groups,
+        rooms: req.adminData.rooms
+    });
 });
 app.get('/profile', (req, res) => {
     res.render('profile'); 

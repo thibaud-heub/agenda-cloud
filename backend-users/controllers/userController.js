@@ -53,3 +53,30 @@ exports.deleteUser = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+exports.loginUser = async (req, res) => {
+    const { email, password } = req.body;
+  
+    try {
+      // Trouver l'utilisateur par email
+      const user = await User.findOne({ mail: email });
+      console.log("Email reçu:", email);
+        console.log("Utilisateur trouvé:", user);
+
+      if (!user) {
+        return res.status(404).json({ message: "Utilisateur non trouvé" });
+      }
+  
+      // Comparer le mot de passe soumis avec le mot de passe haché stocké
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res.status(401).json({ message: "Mot de passe incorrect" });
+      }
+  
+      // Le mot de passe correspond, continuer avec la création de session ou token JWT
+      res.status(200).json({ message: "Connexion réussie", user: user });
+    } catch (error) {
+      res.status(500).json({ message: "Erreur serveur interne", error });
+    }
+  };
+  
