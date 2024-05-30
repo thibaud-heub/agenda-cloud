@@ -105,12 +105,41 @@ document.addEventListener('DOMContentLoaded', () => {
                 calendar.appendChild(dayElement);
             }
         }
-        assignDayClickHandlers();
+        //assignDayClickHandlers();
+        fetchEvents().then(events => {
+            displayEventsOnCalendar(events);
+        }).catch(error => console.error("Failed to fetch events:", error));
     }
 
+    function fetchEvents() {
+        return fetch('/api/events')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .catch(error => console.error('Error fetching events:', error));
+    }
+
+    function displayEventsOnCalendar(events) {
+        events.forEach(event => {
+            const eventDate = new Date(event.start);
+            const dayElementId = "cells_" + eventDate.getDate();
+            const dayElement = document.getElementById(dayElementId);
+    
+            if (dayElement) {
+                const eventElement = document.createElement('div');
+                eventElement.className = 'event';
+                eventElement.textContent = event.title; // Affichez le titre de l'événement
+                dayElement.appendChild(eventElement);
+            }
+        });
+    }
     function showPrevMonth() {
         currentDate.setMonth(currentDate.getMonth() - 1);
         showMonth();
+        
     }
 
     function showNextMonth() {

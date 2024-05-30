@@ -286,3 +286,14 @@ main {
     color: white;
     cursor: pointer;
 }
+.event {
+    padding: 5px;
+    margin-top: 5px;
+    background-color: #ffcc00;
+    color: black;
+    font-size: 0.75em;
+    border-radius: 4px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}

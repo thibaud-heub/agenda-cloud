@@ -122,20 +122,108 @@ window.addEventListener('click', (event) => {
     }
 });
 
-eventForm.addEventListener('submit', (e) => {
+eventForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+
     const title = eventForm.title.value;
     const date = eventForm.date.value;
     const start_time = eventForm.start_time.value;
     const end_time = eventForm.end_time.value;
     const category = eventForm.category.value;
     const description = eventForm.description.value;
-    const groupe = eventForm.groupe.value;
+    const group = eventForm.groupe.value;
 
-    console.log('Event added:', { title, date, start_time, end_time, category, description, groupe });
+    // Premièrement, récupérer les usersIds pour le groupe sélectionné
+    let usersIds = await fetchGroupUsers(group);
+
+    // Ensuite, préparer les données de l'événement avec les usersIds récupérés
+    const eventData = {
+        title,
+        description,
+        start: date + 'T' + start_time,
+        end: date + 'T' + end_time,
+        room: eventForm.room.value, // Assurez-vous que ce champ est aussi géré correctement
+        category,
+        groupsIds: [group],
+        usersIds
+    };
+
+    // Enfin, envoyer les données de l'événement à l'API
+    fetch('/api/events', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        // Afficher le résultat ou mettre à jour l'UI ici
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
 
     eventPopup.style.display = 'none';
     eventForm.reset();
 });
 
-document.addEventListener('page_loaded', assignDayClickHandlers);
+async function fetchGroupUsers(groupId) {
+    const response = await fetch(`/api/groups/${groupId}`);
+    const data = await response.json();
+    return data.usersIds || [];
+}
+
+
+function fetchCategories() {
+    fetch('/api/categories')
+        .then(response => response.json())
+        .then(data => {
+            const categorySelect = document.getElementById('category');
+            data.forEach(category => {
+                let option = document.createElement('option');
+                option.value = category._id;
+                option.textContent = category.name;
+                categorySelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Failed to load categories:', error));
+}
+
+function fetchGroups() {
+    fetch('/api/groups')
+        .then(response => response.json())
+        .then(data => {
+            const groupSelect = document.getElementById('groupe');
+            data.forEach(group => {
+                let option = document.createElement('option');
+                option.value = group._id;
+                option.textContent = group.name;
+                groupSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Failed to load groups:', error));
+}
+
+function fetchRooms() {
+    fetch('/api/rooms')
+        .then(response => response.json())
+        .then(data => {
+            const roomSelect = document.getElementById('room'); // Assurez-vous que ce select existe dans votre HTML
+            data.forEach(room => {
+                let option = document.createElement('option');
+                option.value = room._id;
+                option.textContent = room.name;
+                roomSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Failed to load rooms:', error));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    fetchCategories();
+    fetchGroups();
+    fetchRooms();
+    assignDayClickHandlers();
+});
