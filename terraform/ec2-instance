@@ -1,0 +1,18 @@
+resource "aws_instance" "web" {
+  ami           = "ami-04b70fa74e45c3917"
+  instance_type = "t2.micro"
+  key_name = aws_key_pair.deployer.key_name
+  associate_public_ip_address = true 
+  subnet_id = aws_subnet.pub1a.id 
+  vpc_security_group_ids =[aws_security_group.main_security_group.id]
+}
+
+resource "tls_private_key" "rsa-4096" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "aws_key_pair" "deployer" {
+  key_name   = "deployer-key"
+  public_key = tls_private_key.rsa-4096.public_key_openssh
+}

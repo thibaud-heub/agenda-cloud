@@ -13,6 +13,8 @@ services:
       context: front
     environment:
       NODE_ENV: production
+      USERS_API: http://backend-users:3000
+      EVENTS_API: http://backend-events:3000
     ports:
       - 5000:5000
     depends_on:

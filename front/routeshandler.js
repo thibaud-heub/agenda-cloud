@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 
-const USERS_API = 'http://backend-users:3000';
-const EVENTS_API = 'http://backend-events:3000';
+const USERS_API = process.env.USERS_API;
+const EVENTS_API = process.env.EVENTS_API;
 
 // Proxy pour les utilisateurs
 router.get('/users', async (req, res) => {
