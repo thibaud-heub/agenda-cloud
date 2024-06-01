@@ -2,6 +2,15 @@ const express = require('express');
 const app = express();
 const port = 5000;
 const { router: routeHandler, fetchAdminData } = require('./routeshandler');
+const session = require('express-session');
+
+app.use(session({
+    secret: 'zazizazou',
+    saveUninitialized: false,
+    resave: false,
+    cookie: { secure: false } // True si vous êtes en HTTPS
+}));
+
 
 
 

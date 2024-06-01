@@ -174,20 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
         return months.indexOf(monthName);
     }
-    document.addEventListener('DOMContentLoaded', function() {
-        fetch('/api/categories')
-        .then(response => response.json())
-        .then(categories => {
-            const select = document.getElementById('filter-category');
-            categories.forEach(category => {
-                const option = document.createElement('option');
-                option.value = category._id;
-                option.textContent = category.name;
-                select.appendChild(option);
-            });
-        })
-        .catch(error => console.log('Erreur lors de la récupération des catégories:', error));
-    });
+    
     
     
 
@@ -240,6 +227,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
         }
     }
+
+    function loadOptions() {
+        fetch('/api/categories')
+        .then(response => response.json())
+        .then(categories => {
+            const select = document.getElementById('filter-category');
+            categories.forEach(category => {
+                console.log(category);
+                const option = document.createElement('option');
+                option.value = category.name;
+                option.textContent = category.name;
+                select.appendChild(option);
+            });
+        })
+        .catch(error => console.log('Erreur lors de la récupération des catégories:', error));
+    };
+    loadOptions();
     
     // Par défaut, afficher la vue du mois
     showMonth();    

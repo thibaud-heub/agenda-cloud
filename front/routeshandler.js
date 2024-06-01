@@ -14,6 +14,23 @@ router.get('/users', async (req, res) => {
         res.status(500).json({ error: 'Erreur serveur interne' });
     }
 });
+router.get('/users/profile', async (req, res) => {
+    if (!req.session.user || !req.session.user.user || !req.session.user.user._id) {
+        console.log('Session data:', req.session.user); // Ajouter pour le débogage
+        return res.status(401).json({ error: 'Utilisateur non authentifié ou session invalide.' });
+    }
+    try {
+        const userId = req.session.user.user._id;
+        console.log('Fetching profile for user ID:', userId); // Log pour débogage
+        const response = await axios.get(`${USERS_API}/users/${userId}`);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error fetching user profile:', error);
+        res.status(500).json({ error: 'Erreur serveur interne' });
+    }
+});
+
+
 
 router.get('/users/:id', async (req, res) => {
     try {
@@ -24,21 +41,39 @@ router.get('/users/:id', async (req, res) => {
     }
 });
 router.put('/users/:id', async (req, res) => {
+    console.log('Received data:', req.body);  // Log the data received to debug
     try {
         const userId = req.params.id;
-        const groupsIds = req.body.groupsIds;
-        const response = await axios.put(`${USERS_API}/users/${userId}`, { groupsIds });
+        const { firstName, lastName, mail } = req.body;
+        // Additional server-side validation can be performed here
+        if (!firstName || !lastName || !mail) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+        const response = await axios.put(`${USERS_API}/users/${userId}`, { firstName, lastName, mail });
         res.json(response.data);
     } catch (error) {
-        console.error('Error updating user groups:', error);
+        console.error('Error updating user profile:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
+router.get('/profile/getUserId', (req, res) => {
+    if (req.session && req.session.user.user._id) {
+        res.json({ userId: req.session.user.user._id});
+    } else {
+        res.status(401).json({ error: 'Utilisateur non identifié' });
+    }
+});
+
+
 // Route de connexion
 router.post('/login', async (req, res) => {
     try {
         const response = await axios.post(`${USERS_API}/users/login`, req.body);
-        // Vous pouvez ici traiter la réponse, comme l'enregistrement des données de session
+        if (response.status === 200) {
+            req.session.user = response.data; // Assurez-vous que cette donnée inclut `_id`
+            console.log('Session user set:', req.session.user);
+        }
         res.status(response.status).json(response.data);
     } catch (error) {
         console.error('Error during login:', error);
@@ -46,11 +81,16 @@ router.post('/login', async (req, res) => {
     }
 });
 
+
+
 // Route d'inscription
 router.post('/signup', async (req, res) => {
     try {
         const response = await axios.post(`${USERS_API}/users`, req.body);
-        // Traitement après inscription, par exemple envoi d'un email de confirmation
+        if (response.status === 200) {
+            // Sauvegardez les données de l'utilisateur dans la session
+            req.session.user = response.data;
+        }
         res.status(response.status).json(response.data);
     } catch (error) {
         console.error('Error during registration:', error);

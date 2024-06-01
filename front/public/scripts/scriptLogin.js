@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
             fetch('api/login', {
                 method: 'POST',
+                credentials: "include",
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -44,6 +45,7 @@ document.addEventListener("DOMContentLoaded", function() {
     
             fetch('api/signup', {
                 method: 'POST',
+                credentials: "include",
                 headers: {
                     'Content-Type': 'application/json',
                 },

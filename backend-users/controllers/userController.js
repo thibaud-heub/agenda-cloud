@@ -35,14 +35,24 @@ exports.createUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
     try {
         const updateData = req.body;
-        updateData.password = await bcrypt.hash(updateData.password, 10);
+
+        // Vérifiez si le mot de passe est fourni avant de le hacher
+        if (updateData.password) {
+            updateData.password = await bcrypt.hash(updateData.password, 10);
+        }
+
         const user = await User.findByIdAndUpdate(req.params.id, updateData, { new: true });
-        if (!user) return res.status(404).json({ error: 'User not found' });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
         res.json(user);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
+
 
 exports.deleteUser = async (req, res) => {
     try {
