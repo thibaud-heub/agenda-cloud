@@ -174,8 +174,8 @@ eventForm.addEventListener('submit', async (e) => {
     }
 
     // Conversion des chaînes de date et d'heure en objets Date
-    const start = new date(`${date}T${startTime}:00.000Z`);
-    const end = new date (`${date}T${endTime}:00.000Z`);
+    const start =  date +'T'+startTime +':00.000Z';
+    const end =  date+'T'+ endTime +':00.000Z'
 
     // Log pour vérifier la conversion des dates
     console.log({start, end});
@@ -185,24 +185,25 @@ eventForm.addEventListener('submit', async (e) => {
 
     // Préparer les données de l'événement avec les usersIds récupérés
     const eventData = {
-        title :title,
-        description : description,
-        start : start,
-        end :end,
-        room : room,
-        category : category,
+        title: title,
+        description: description,
+        start: start,
+        end: end,
+        room: room,
+        category: category,
         groupsIds: group,
-        usersIds : [usersId]
+        usersIds: usersId
     };
 
     // Conversion en JSON et envoi des données de l'événement à l'API
-    console.log(eventData);
+    
     fetch('/api/events', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(eventData)  
     })
     .then(response => {
+        
         if (!response.ok) {
             throw new Error('Failed to create event');
         }
@@ -214,6 +215,7 @@ eventForm.addEventListener('submit', async (e) => {
     })
     .catch(error => {
         console.error('Error:', error);
+        console.log(JSON.stringify(eventData));
         alert('Failed to create event: ' + error.message);
     });
 
@@ -236,7 +238,7 @@ function fetchCategories() {
             const categorySelect = document.getElementById('category');
             data.forEach(category => {
                 let option = document.createElement('option');
-                option.value = category._id;
+                option.value = category.name;
                 option.textContent = category.name;
                 categorySelect.appendChild(option);
             });

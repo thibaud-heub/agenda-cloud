@@ -217,21 +217,9 @@ router.get('/events', async (req, res) => {
 router.post('/events', async (req, res) => {
     try {
         // Prend les données de l'événement du corps de la requête
-        const { title, date, start_time, end_time, category, description, groupe } = req.body;
-
-        // Crée l'objet de l'événement pour envoyer au backend d'événements
-        const eventData = {
-            title,
-            date,
-            start: date + 'T' + start_time,
-            end: date + 'T' + end_time,
-            category,
-            description,
-            groupsIds: [groupe], // Supposons que 'groupe' soit un ID valide
-        };
-
+        const data = req.body;
         // Envoie la requête POST au service backend d'événements
-        const response = await axios.post(`${EVENTS_API}/events`, eventData);
+        const response = await axios.post(`${EVENTS_API}/events`, data);
 
         // Renvoie la réponse du backend d'événements
         res.status(response.status).json(response.data);
