@@ -87,13 +87,17 @@
             <tr>
                 <th>ID</th>
                 <th>Nom</th>
+                <th>Utilisateurs</th>
             </tr>
         </thead>
         <tbody>
             <% groups.forEach(group => { %>
-            <tr>
+            <tr data-group-id="<%= group._id %>" data-user-ids="<%= group.usersIds.join(',') %>">
                 <td><%= group._id %></td>
                 <td><%= group.name %></td>
+                <td id="group-users-<%= group._id %>">
+                    <!-- Les noms des utilisateurs seront insérés ici -->
+                </td>
             </tr>
             <% }) %>
         </tbody>

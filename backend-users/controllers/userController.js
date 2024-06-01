@@ -24,11 +24,21 @@ exports.createUser = async (req, res) => {
     try {
         const { firstName, lastName, mail, password } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ firstName, lastName, mail, password: hashedPassword });
+        
+        const newUser = new User({
+            firstName,
+            lastName,
+            mail,
+            password: hashedPassword,
+            groupsIds: [] ,
+            eventsIds: []
+        });
+
         await newUser.save();
         res.status(201).json(newUser);
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error('Error creating user:', error);
+        res.status(500).json({ error: 'Erreur serveur interne' });
     }
 };
 

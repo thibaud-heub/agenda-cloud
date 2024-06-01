@@ -144,18 +144,9 @@ closeButton.addEventListener('click', () => {
     eventPopup.style.display = 'none';
 });
 
-eventButton.addEventListener('click', () => openPopupForButton());
-
-window.addEventListener('click', (event) => {
-    if (event.target === eventPopup) {
-        eventPopup.style.display = 'none';
-    }
-});
-
 eventForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-   
     const title = document.getElementById('title').value;
     const date = document.getElementById('date').value;
     const startTime = document.getElementById('start_time').value;
@@ -164,32 +155,52 @@ eventForm.addEventListener('submit', async (e) => {
     const description = document.getElementById('description').value;
     const group = document.getElementById('groupe').value;
     const room = document.getElementById('room').value;
-    
-    console.log({title, date, startTime, endTime, category, description, group, room});
-    
 
+    // Log des valeurs pour le débogage
+    console.log({title, date, startTime, endTime, category, description, group, room});
+
+    // Vérification des valeurs de date et d'heure
+    if (!date || !startTime || !endTime) {
+        console.error('Date, start time, or end time is missing');
+        alert('Veuillez fournir une date, une heure de début et une heure de fin valides.');
+        return;
+    }
+
+    // Vérification des autres valeurs obligatoires
+    if (!title || !category || !group || !room) {
+        console.error('Required fields are missing');
+        alert('Veuillez remplir tous les champs obligatoires.');
+        return;
+    }
+
+    // Conversion des chaînes de date et d'heure en objets Date
+    const start = new date(`${date}T${startTime}:00.000Z`);
+    const end = new date (`${date}T${endTime}:00.000Z`);
+
+    // Log pour vérifier la conversion des dates
+    console.log({start, end});
 
     // Premièrement, récupérer les usersIds pour le groupe sélectionné
-    let usersIds = await fetchGroupUsers(group);
+    let usersId = await fetchGroupUsers(group);
 
-    // Ensuite, préparer les données de l'événement avec les usersIds récupérés
+    // Préparer les données de l'événement avec les usersIds récupérés
     const eventData = {
-        title,
-        description,
-        start: date + 'T' + start_time,
-        end: date + 'T' + end_time,
-        room: eventForm.room.value, // Assurez-vous que ce champ est aussi géré correctement
-        category,
-        groupsIds: [group],
-        usersIds
+        title :title,
+        description : description,
+        start : start,
+        end :end,
+        room : room,
+        category : category,
+        groupsIds: group,
+        usersIds : [usersId]
     };
-    
 
-    // Enfin, envoyer les données de l'événement à l'API
+    // Conversion en JSON et envoi des données de l'événement à l'API
+    console.log(eventData);
     fetch('/api/events', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({title, description, start: date + 'T' + start_time, end: date + 'T' + end_time, room, category, groupsIds: [group], usersIds})
+        body: JSON.stringify(eventData)  
     })
     .then(response => {
         if (!response.ok) {
@@ -199,22 +210,22 @@ eventForm.addEventListener('submit', async (e) => {
     })
     .then(data => {
         console.log('Success:', data);
-        // Mettre à jour l'interface utilisateur ici
+       
     })
     .catch(error => {
         console.error('Error:', error);
         alert('Failed to create event: ' + error.message);
     });
-    
 
     eventPopup.style.display = 'none';
     eventForm.reset();
 });
 
+
 async function fetchGroupUsers(groupId) {
     const response = await fetch(`/api/groups/${groupId}`);
     const data = await response.json();
-    return data.usersIds || [];
+    return data.usersIds;
 }
 
 
@@ -272,4 +283,4 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener("new_month", () => assignDayClickHandlers());
 document.addEventListener("new_week", () => assignWeekClickHandlers());
-document.addEventListener("new_day", () => assignSingleDayClickHandlers());
+document.addEventListener("new_day", () => assignSingleDayClickHandler());
