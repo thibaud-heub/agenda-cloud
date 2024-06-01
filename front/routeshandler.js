@@ -86,8 +86,8 @@ router.post('/login', async (req, res) => {
 // Route d'inscription
 router.post('/signup', async (req, res) => {
     try {
-        const response = await axios.post(`${USERS_API}/users`, req.body);
-        if (response.status === 200) {
+        const response = await axios.post(`${USERS_API}/users`, { ...req.body, groupsIds: [], eventsIds: [] });
+        if (response.status === 201) { // Notez que le code de statut pour la création réussie est 201
             // Sauvegardez les données de l'utilisateur dans la session
             req.session.user = response.data;
         }
@@ -155,13 +155,32 @@ async function fetchAdminData(req, res, next) {
 
 router.get('/groups', async (req, res) => {
     try {
-        const response = await axios.get(`${EVENTS_API}/groups`);
-        res.json(response.data);
+        const groupsResponse = await axios.get(`${EVENTS_API}/groups`);
+        const usersResponse = await axios.get(`${USERS_API}/users`);
+        
+        const groups = groupsResponse.data;
+        const users = usersResponse.data.map(user => {
+            // Initialiser groupsIds si elle n'existe pas
+            if (!user.groupsIds) {
+                user.groupsIds = [];
+            }
+            return user;
+        });
+        
+        // Ajouter les utilisateurs à leurs groupes respectifs
+        groups.forEach(group => {
+            group.users = users.filter(user => user.groupsIds.includes(group._id));
+        });
+
+        res.json(groups);
     } catch (error) {
         console.error('Error fetching groups:', error);
         res.status(500).json({ error: 'Erreur serveur interne' });
     }
 });
+
+
+
 
 router.get('/groups/:id', async (req, res) => {
     try {
@@ -198,21 +217,9 @@ router.get('/events', async (req, res) => {
 router.post('/events', async (req, res) => {
     try {
         // Prend les données de l'événement du corps de la requête
-        const { title, date, start_time, end_time, category, description, groupe } = req.body;
-
-        // Crée l'objet de l'événement pour envoyer au backend d'événements
-        const eventData = {
-            title,
-            date,
-            start: date + 'T' + start_time,
-            end: date + 'T' + end_time,
-            category,
-            description,
-            groupsIds: [groupe], // Supposons que 'groupe' soit un ID valide
-        };
-
+        const data = req.body;
         // Envoie la requête POST au service backend d'événements
-        const response = await axios.post(`${EVENTS_API}/events`, eventData);
+        const response = await axios.post(`${EVENTS_API}/events`, data);
 
         // Renvoie la réponse du backend d'événements
         res.status(response.status).json(response.data);
@@ -247,6 +254,7 @@ router.put('/users/:id/groups', async (req, res) => {
     }
 });
 
+
 // Mettre à jour les utilisateurs d'un groupe
 router.put('/groups/:id/users', async (req, res) => {
     const groupId = req.params.id;
@@ -272,7 +280,14 @@ router.put('/groups/:id/users', async (req, res) => {
         res.status(500).json({ error: 'Internal server error while updating group users' });
     }
 });
-
+router.get('/logoff', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).json({ error: 'Erreur lors de la déconnexion' });
+        }
+        res.redirect('/');
+    });
+});
 
 module.exports = {
     router,

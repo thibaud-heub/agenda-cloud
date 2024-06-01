@@ -48,3 +48,29 @@ exports.deleteGroup = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+exports.addUserToGroup = async (req, res) => {
+    try {
+        const groupId = req.params.id;
+        const { userId } = req.body;
+
+        // Trouver le groupe par son ID
+        const group = await Group.findById(groupId);
+        if (!group) {
+            return res.status(404).json({ error: 'Group not found' });
+        }
+
+        // Ajouter l'utilisateur à la liste des utilisateurs du groupe
+        if (!group.usersIds.includes(userId)) {
+            group.usersIds.push(userId);
+        }
+
+        // Enregistrer les modifications
+        await group.save();
+
+        res.status(200).json({ message: 'User added to group successfully' });
+    } catch (error) {
+        console.error('Error adding user to group:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};

@@ -276,3 +276,6 @@ document.addEventListener('DOMContentLoaded', () => {
     var event_page_loaded = new Event("page_loaded");
     document.dispatchEvent(event_page_loaded);
 });
+eventForm.addEventListener('submit', () => {
+    showMonth();
+})
