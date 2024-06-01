@@ -37,13 +37,20 @@ document.addEventListener('DOMContentLoaded', () => {
         "Jeudi", "Vendredi", "Samedi", "Dimanche"
     ];
 
+    var event_new_month = new Event("new_month");
+    var event_new_week = new Event("new_week");
+    var event_new_day = new Event("new_day");
+
     function showToday() {
         currentView = 'day';
         const today = new Date(currentDate);
         weekdays.classList.add('hidden');
         calendar.classList.add('full-height');
-        calendar.innerHTML = `<div>${dayNames[(today.getDay() + 6) % 7]} ${today.getDate().toString().padStart(2, '0')}</div>`;
+        const dayId = "cells_day";
+        calendar.innerHTML = `<div id="${dayId}">${dayNames[(today.getDay() + 6) % 7]} ${today.getDate().toString().padStart(2, '0')}</div>`;
+        monthNameElement.textContent = `${monthNames[today.getMonth()]} ${today.getFullYear()}`;
         monElement.classList.toggle('style-change');
+        document.dispatchEvent(event_new_day);
     }
 
     function showWeek() {
@@ -58,9 +65,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const dayElement = document.createElement('div');
             
             dayElement.textContent = `${day.getDate().toString().padStart(2, '0')}`;
+            let id_name = "cells_" + i.toString();
+            dayElement.setAttribute("id", id_name);
             calendar.appendChild(dayElement);
         }
+        monthNameElement.textContent = `${monthNames[today.getMonth()]} ${today.getFullYear()}`;
         monElement.classList.toggle('style-change');
+        document.dispatchEvent(event_new_week);
     }
 
     function showMonth() {
@@ -166,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 dayElement.appendChild(eventElement);
             }
         });
+        document.dispatchEvent(event_new_month);
     }
     
     // Fonction pour convertir le nom du mois en index (0 pour janvier, 11 pour décembre)

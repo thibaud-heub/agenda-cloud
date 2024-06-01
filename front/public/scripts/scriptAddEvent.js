@@ -105,6 +105,36 @@ function assignDayClickHandlers() {
     }
 }
 
+function assignWeekClickHandlers() {
+    let currentDate = new Date();
+    const today = new Date(currentDate);
+    const startOfWeek = today.getDate() - ((today.getDay() + 6) % 7);
+    for (let i = 0; i < 7; i++) {
+        const day = new Date(today.setDate(startOfWeek + i));
+        let day_id = 'cells_' + i.toString();
+        var day_div = document.getElementById(day_id);
+        if (day_div) {
+            day_div.addEventListener('click', (function(clickedDay) {
+                return function() {
+                    openPopup(clickedDay);
+                };
+            })(day));
+        }
+    }
+}
+
+function assignSingleDayClickHandler() {
+    let currentDate = new Date();
+    const today = new Date(currentDate);
+    let day_id = 'cells_day';
+    var day_div = document.getElementById(day_id);
+    if (day_div) {
+        day_div.addEventListener('click', function() {
+            openPopup(today);
+        });
+    }
+}
+
 const closeButton = document.querySelector('.close_button');
 const eventForm = document.getElementById('eventForm');
 const eventPopup = document.getElementById('event_popup');
@@ -239,3 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchRooms();
     assignDayClickHandlers();
 });
+
+document.addEventListener("new_month", () => assignDayClickHandlers());
+document.addEventListener("new_week", () => assignWeekClickHandlers());
+document.addEventListener("new_day", () => assignSingleDayClickHandlers());
