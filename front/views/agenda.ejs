@@ -5,6 +5,14 @@
     <%- include('partials/nav') %>
 </header>
 <main>
+    <div id="filters">
+        <label for="filter-category">Filtrer par catégorie:</label>
+        <select id="filter-category">
+            <option value="all">Toutes les catégories</option>
+            <!-- Les options seront ajoutées dynamiquement ici -->
+        </select>
+    </div>
+    
     <div id="month-navigation">
         <button id="prev-month">&lt;</button>
         <span id="month-name"></span>

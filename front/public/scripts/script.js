@@ -8,9 +8,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const nextMonthButton = document.getElementById('next-month');
     const monthNameElement = document.getElementById('month-name');
 
+
+    const categoryColors = {
+        'Formation': 'color-green',
+        'Réunion': 'color-blue',
+        'Conférence': 'color-red',
+        'Social': 'color-yellow'
+    };
+    
+    
     let currentDate = new Date();
     let currentMonth = currentDate.getMonth();
-    let currentView = 'month'; // Valeurs possibles: 'month', 'week', 'day'
+    let currentView = 'month';
 
     todayButton.addEventListener('click', showToday);
     weekButton.addEventListener('click', showWeek);
@@ -124,7 +133,27 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('Error fetching events:', error));
     }
 
+    document.getElementById('filter-category').addEventListener('change', () => {
+        showMonth();  // Assure que la fonction showMonth rappelle fetchEvents et displayEventsOnCalendar
+    });
+    
     function displayEventsOnCalendar(events) {
+        const monthAndYear = document.getElementById('month-name').textContent;
+        const [monthName, year] = monthAndYear.split(' ');
+        const monthIndex = getMonthIndex(monthName);
+        const yearNumber = parseInt(year, 10);
+    
+        const selectedCategory = document.getElementById('filter-category').value;
+    
+        // Tri et filtre des événements par date et catégorie
+        events = events.filter(event => {
+            const eventDate = new Date(event.start);
+            const eventMonth = eventDate.getMonth();
+            const eventYear = eventDate.getFullYear();
+            return eventMonth === monthIndex && eventYear === yearNumber &&
+                   (selectedCategory === 'all' || event.category === selectedCategory);
+        }).sort((a, b) => new Date(a.start) - new Date(b.start));
+    
         events.forEach(event => {
             const eventDate = new Date(event.start);
             const dayElementId = "cells_" + eventDate.getDate();
@@ -132,12 +161,35 @@ document.addEventListener('DOMContentLoaded', () => {
     
             if (dayElement) {
                 const eventElement = document.createElement('div');
-                eventElement.className = 'event';
-                eventElement.textContent = event.title; // Affichez le titre de l'événement
+                eventElement.className = `event ${categoryColors[event.category] || 'default-color'}`;
+                eventElement.textContent = `${event.title} (${eventDate.getHours()}:${eventDate.getMinutes().toString().padStart(2, '0')})`;
                 dayElement.appendChild(eventElement);
             }
         });
     }
+    
+    // Fonction pour convertir le nom du mois en index (0 pour janvier, 11 pour décembre)
+    function getMonthIndex(monthName) {
+        const months = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+                        "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+        return months.indexOf(monthName);
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('/api/categories')
+        .then(response => response.json())
+        .then(categories => {
+            const select = document.getElementById('filter-category');
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category._id;
+                option.textContent = category.name;
+                select.appendChild(option);
+            });
+        })
+        .catch(error => console.log('Erreur lors de la récupération des catégories:', error));
+    });
+    
+    
 
     function showPrevWeek() {
         currentDate.setDate(currentDate.getDate() - 7);

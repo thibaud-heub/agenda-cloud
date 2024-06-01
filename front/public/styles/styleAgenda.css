@@ -101,14 +101,13 @@ main {
 }
 
 #calendar div {
-    background-color: #f1f3f4;
     border: 1px solid #e0e0e0;
     padding: 10px;
     text-align: center;
     transition-duration: 500ms;
     
 }
-#cells:hover{
+.current-month:hover{
     transform : scale(1.03);
 }
 #calendar div:hover {
@@ -297,3 +296,67 @@ main {
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+
+.color-green { background-color: #a4de02; }
+.color-blue { background-color: #3a86ff; }
+.color-red { background-color: #ff006e; }
+.color-yellow { background-color: #ffbe0b; }
+.default-color { background-color: #cccccc; }
+
+
+/* Stylisation générale du container du filtre */
+#filters {
+    text-align: left;
+}
+
+/* Stylisation du label du menu déroulant */
+#filters label {
+    margin-right: 10px;
+    font-size: 16px;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Stylisation du menu déroulant */
+#filter-category {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 2px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    outline: none;
+}
+
+/* Effet au survol sur le menu déroulant */
+#filter-category:hover {
+    border-color: #888;
+}
+
+/* Stylisation des options dans le menu déroulant */
+#filter-category option {
+    padding: 10px;
+    background: white;
+    border-bottom: 1px solid #eee; /* Ajoute une ligne séparatrice entre les options */
+}
+
+/* Stylisation de l'option pour ajouter une nouvelle catégorie (s'il s'agit d'un choix) */
+#filter-category option[value="new"] {
+    background-color: #f9f9f9;
+    font-style: italic;
+}
+
+/* Ajoute un petit triangle vers le bas pour indiquer qu'il s'agit d'un menu déroulant */
+#filter-category {
+    appearance: none; /* Supprime l'apparence par défaut pour tous les navigateurs */
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212%22%20height%3D%2212%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpolygon%20fill%3D%22%23333%22%20points%3D%226%2C9%206%2C3%2011%2C6%22/%3E%3C/svg%3E');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px 12px;
+    padding-right: 30px; /* Ajuste le padding à droite pour faire de la place pour l'icône */
+}
+
+

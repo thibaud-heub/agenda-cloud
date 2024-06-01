@@ -1,15 +1,40 @@
 document.getElementById('assignGroupForm').addEventListener('submit', async function(event) {
-    event.preventDefault();
-    const userId = document.getElementById('userSelect').value;
-    const selectedGroups = Array.from(document.getElementById('groupSelect').selectedOptions).map(option => option.value);
+  event.preventDefault();
 
-    try {
-        const response = await axios.put(`/users/${userId}`, { groupsIds: selectedGroups });
-        alert('Group updated successfully!');
-    } catch (error) {
-        alert('Failed to update group: ' + error.message);
-    }
+  const userId = document.getElementById('userSelect').value;
+  const selectedGroups = Array.from(document.getElementById('groupSelect').selectedOptions).map(option => option.value);
+
+  // Vérifier que des groupes ont été sélectionnés
+  if (!selectedGroups.length) {
+      alert('Veuillez sélectionner au moins un groupe.');
+      return;
+  }
+
+  try {
+      // Mise à jour des groupes pour l'utilisateur spécifié avec fetch en utilisant le routehandler
+      const response = await fetch(`/api/users/${userId}/groups`, {
+          method: 'PUT',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ groupsIds: selectedGroups })
+      });
+
+      const data = await response.json(); // Récupérer la réponse du serveur
+
+      // Si la mise à jour réussit, afficher un message de succès
+      if (response.ok) {
+          alert('Utilisateur affilié aux groupes avec succès!');
+      } else {
+          throw new Error(`Failed to update user's groups with status: ${response.status}`);
+      }
+  } catch (error) {
+      console.error('Error updating user groups:', error);
+      alert('Échec de l\'affiliation aux groupes : ' + error.message);
+  }
 });
+
+
 
 document.getElementById('createRoomForm').addEventListener('submit', function(event) {
     event.preventDefault();

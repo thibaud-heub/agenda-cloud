@@ -181,8 +181,61 @@ router.post('/events', async (req, res) => {
         res.status(500).json({ error: 'Erreur lors de l’ajout de l’événement' });
     }
 });
+// Mettre à jour les groupes d'un utilisateur
+router.put('/users/:id/groups', async (req, res) => {
+    const userId = req.params.id;
+    const { groupsIds } = req.body;
+
+    try {
+        // Mettre à jour les groupes de l'utilisateur dans la base de données de l'utilisateur
+        const updateUserResponse = await axios.put(`${USERS_API}/users/${userId}`, { groupsIds });
+        if (updateUserResponse.status !== 200) {
+            throw new Error(`Failed to update user's groups with status: ${updateUserResponse.status}`);
+        }
+
+        // Mettre à jour l'appartenance de l'utilisateur dans chaque groupe concerné
+        const updateGroupsPromises = groupsIds.map(groupId =>
+            axios.put(`${EVENTS_API}/groups/${groupId}/addUser`, { userId })
+        );
+
+        await Promise.all(updateGroupsPromises);
+
+        res.json({ message: 'User and groups updated successfully!' });
+    } catch (error) {
+        console.error('Error updating user groups:', error);
+        res.status(500).json({ error: 'Internal server error while updating user groups' });
+    }
+});
+
+// Mettre à jour les utilisateurs d'un groupe
+router.put('/groups/:id/users', async (req, res) => {
+    const groupId = req.params.id;
+    const { userIds } = req.body;
+
+    try {
+        // Mettre à jour les utilisateurs du groupe dans la base de données du groupe
+        const updateGroupResponse = await axios.put(`${EVENTS_API}/groups/${groupId}`, { userIds });
+        if (updateGroupResponse.status !== 200) {
+            throw new Error(`Failed to update group's users with status: ${updateGroupResponse.status}`);
+        }
+
+        // Mettre à jour les groupes de chaque utilisateur concerné
+        const updateUsersPromises = userIds.map(userId =>
+            axios.put(`${USERS_API}/users/${userId}/addGroup`, { groupId })
+        );
+
+        await Promise.all(updateUsersPromises);
+
+        res.json({ message: 'Group and users updated successfully!' });
+    } catch (error) {
+        console.error('Error updating group users:', error);
+        res.status(500).json({ error: 'Internal server error while updating group users' });
+    }
+});
+
 
 module.exports = {
     router,
-    fetchAdminData  
+    fetchAdminData
+    
 };

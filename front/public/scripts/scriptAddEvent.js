@@ -125,13 +125,19 @@ window.addEventListener('click', (event) => {
 eventForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const title = eventForm.title.value;
-    const date = eventForm.date.value;
-    const start_time = eventForm.start_time.value;
-    const end_time = eventForm.end_time.value;
-    const category = eventForm.category.value;
-    const description = eventForm.description.value;
-    const group = eventForm.groupe.value;
+   
+    const title = document.getElementById('title').value;
+    const date = document.getElementById('date').value;
+    const startTime = document.getElementById('start_time').value;
+    const endTime = document.getElementById('end_time').value;
+    const category = document.getElementById('category').value;
+    const description = document.getElementById('description').value;
+    const group = document.getElementById('groupe').value;
+    const room = document.getElementById('room').value;
+    
+    console.log({title, date, startTime, endTime, category, description, group, room});
+    
+
 
     // Premièrement, récupérer les usersIds pour le groupe sélectionné
     let usersIds = await fetchGroupUsers(group);
@@ -147,23 +153,29 @@ eventForm.addEventListener('submit', async (e) => {
         groupsIds: [group],
         usersIds
     };
+    
 
     // Enfin, envoyer les données de l'événement à l'API
     fetch('/api/events', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(eventData)
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({title, description, start: date + 'T' + start_time, end: date + 'T' + end_time, room, category, groupsIds: [group], usersIds})
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to create event');
+        }
+        return response.json();
+    })
     .then(data => {
         console.log('Success:', data);
-        // Afficher le résultat ou mettre à jour l'UI ici
+        // Mettre à jour l'interface utilisateur ici
     })
-    .catch((error) => {
+    .catch(error => {
         console.error('Error:', error);
+        alert('Failed to create event: ' + error.message);
     });
+    
 
     eventPopup.style.display = 'none';
     eventForm.reset();
