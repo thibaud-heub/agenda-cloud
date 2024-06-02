@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOOGOO Agenda</title>
+    <link rel="stylesheet" href="/styles/profileStyle.css">
+    <link rel="icon" href="/res/calendar.png">
+    <script src="/scripts/scriptProfile.js" defer></script>
+</head>
+<body>
+
+<header>
+    <h1>Profil</h1>
+    <%- include('partials/nav') %>
+</header>
+
+<main>
+    <div class="profile-section">
+        <h2>Mon Profil</h2>
+        <img id="profile-pic" src="/res/profile.png" alt="Photo de profil">
+        <div class="profile-info">
+            
+            <div class="profile-details">
+                <p><strong>Nom :</strong> Flix</p>
+                <p><strong>Prénom :</strong> Bus</p>
+                <p><strong>Email :</strong> test@gmail.com</p>
+                <button id="edit-profile">Modifier le profil</button>
+            </div>
+
+        </div>
+        <div class="profile-addinfo">
+            <h3>Infos supplémentaires : </h3>
+        </div>
+    </div>
+
+    <div id="edit_profile_popup" class="popup">
+        <div class="popup-content">
+            <span class="close_button">&times;</span>
+            <form id="editProfileForm">
+                <label for="last_name">Nom :</label>
+                <input type="text" id="last_name" name="last_name" value="" required>
+                <label for="first_name">Prénom :</label>
+                <input type="text" id="first_name" name="first_name" value="" required>
+                <label for="email">Email :</label>
+                <input type="email" id="email" name="email" value="" required>
+                <label for="profile_pic">Photo de profil :</label>
+                <input type="file" id="profile_pic" name="profile_pic" accept="image/*">
+                <button type="submit">Sauvegarder</button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<%- include('partials/footer') %>
+</body>
+</html>

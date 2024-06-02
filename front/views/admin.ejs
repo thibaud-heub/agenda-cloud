@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <link href="/styles/admin.css" rel="stylesheet">
+</head>
+<body>
+
+<header>
+  <h1>Administration</h1>
+</header>
+
+<main>
+    <div id="form-blocks">
+        <form id="assignGroupForm">
+            <select id="userSelect">
+                <% users.forEach(user => { %>
+                <option value="<%= user._id %>"><%= user.firstName %> <%= user.lastName %></option>
+                <% }); %>
+            </select>
+
+            <select multiple id="groupSelect">
+                <% groups.forEach(group => { %>
+                <option value="<%= group._id %>"><%= group.name %></option>
+                <% }); %>
+            </select>
+
+            <button type="submit">Affilier au groupe</button>
+        </form>
+
+        <form id="createRoomForm">
+            <input type="text" id="roomName" placeholder="Nom de la salle" required>
+            <button type="submit">Créer Salle</button>
+        </form>
+
+        <form id="createGroupForm">
+            <input type="text" id="groupName" placeholder="Nom du groupe" required>
+            <button type="submit">Créer Groupe</button>
+        </form>
+    </div>
+
+    <div id="filter-container">
+        <button class="filter-btn active" data-filter="user">Utilisateurs</button>
+        <button class="filter-btn" data-filter="room">Rooms</button>
+        <button class="filter-btn" data-filter="group">Groupes</button>
+    </div>
+
+    <table id="user-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach(user => { %>
+            <tr>
+                <td><%= user._id %></td>
+                <td><%= user.lastName %></td>
+                <td><%= user.firstName %></td>
+                <td><%= user.mail %></td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <table id="room-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% rooms.forEach(room => { %>
+            <tr>
+                <td><%= room._id %></td>
+                <td><%= room.name %></td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <table id="group-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Utilisateurs</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% groups.forEach(group => { %>
+            <tr data-group-id="<%= group._id %>" data-user-ids="<%= group.usersIds.join(',') %>">
+                <td><%= group._id %></td>
+                <td><%= group.name %></td>
+                <td id="group-users-<%= group._id %>">
+                    <!-- Les noms des utilisateurs seront insérés ici -->
+                </td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</main>
+
+<script src="/scripts/admin.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,362 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+header {
+    background-color: #4285f4;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+header nav {
+    display: flex;
+    align-items: center;
+}
+
+header nav button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+header nav button:hover {
+    text-decoration: underline;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+#month-navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+#month-navigation button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    position: absolute;
+}
+
+#prev-month {
+    left: 0;
+}
+
+#next-month {
+    right: 0;
+}
+
+#month-name {
+    margin: 0 20px;
+    font-size: 24px;
+}
+
+#weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#calendar {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+
+#calendar.full-height {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#calendar.full-height > div {
+    width: 100%;
+    height: 100%;
+}
+
+#calendar div {
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    text-align: center;
+    transition-duration: 500ms;
+    
+}
+.current-month:hover{
+    transform : scale(1.03);
+}
+#calendar div:hover {
+    z-index: 4;
+    background-color: #aad8ee;
+
+    cursor: pointer;
+    
+}
+
+#calendar .prev-month, #calendar .next-month {
+    background-color: #e0e0e0;
+    color: #515151;
+}
+#calendar .today {
+    
+    
+    border: 2px solid #959595;
+}
+.hidden > div {
+    display: none;
+}
+
+/* Popup Styling */
+.popup {
+    display: none; 
+    position: fixed; 
+    z-index: 10; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+}
+
+.popup-content {
+    background-color: #fff;
+    margin: 10% auto; 
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+}
+
+.popup-content form {
+    display: flex;
+    flex-direction: column;
+}
+
+.popup-content label {
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
+
+.popup-content input,
+.popup-content select,
+.popup-content textarea {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: calc(100% - 20px); /* Adjust for padding */
+}
+
+.popup-content button {
+    display: inline-block;
+    width: 100%;
+    padding: 10px;
+    background-color: #4285f4;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.popup-content button:hover {
+    background-color: #357ae8;
+}
+
+#close_button {
+    background-color: rgb(216, 51, 51);
+    
+    justify-content: center;
+    top: 10px;
+    right: 200px;
+    color: #ffffff;
+    margin: 5px 0 0 0 ;
+    
+    cursor: pointer;
+    
+}
+.close_button {
+    
+    background-color: rgb(86, 84, 84);
+    padding: 3px 8px 3px 8px;
+    border-radius: 50px;
+    justify-self: right;
+    top: 10px;
+    right: 200px;
+    color: #ffffff;
+    margin: 5px 0 0 95% ;
+    
+    cursor: pointer;
+    transition: 500ms;
+    
+}
+.close_button:hover,
+.close_button:focus {
+    color: red;
+    background-color: #ccc;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+#close_button:hover,
+#close_button:focus {
+    
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#event_popup h2 {
+    margin-top: 0;
+    color: #4285f4;
+}
+
+
+#profile{
+    width: 2.5em;
+    filter: invert(0.9);
+    cursor: pointer;
+}
+
+/* styleAgenda.css */
+
+.control-panel {
+    display: none; /* Hidden by default */
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ddd;
+    z-index: 1000;
+    right: 10px; /* Adjust based on your layout */
+    top: 50px; /* Adjust based on your layout */
+}
+
+.control-panel ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.control-panel ul li {
+    padding: 10px 20px;
+    color: black;
+}
+
+.control-panel ul li a {
+    text-decoration: none;
+    color: black;
+}
+
+.profile-container {
+    position: relative;
+    display: inline-block;
+}
+.control-panel li:hover{
+    background-color: #4285f4;
+    color: white;
+    cursor: pointer;
+}
+.event {
+    padding: 5px;
+    margin-top: 5px;
+    background-color: #ffcc00;
+    color: black;
+    font-size: 0.75em;
+    border-radius: 4px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.color-green { background-color: #a4de02; }
+.color-blue { background-color: #3a86ff; }
+.color-red { background-color: #ff006e; }
+.color-yellow { background-color: #ffbe0b; }
+.default-color { background-color: #cccccc; }
+
+
+/* Stylisation générale du container du filtre */
+#filters {
+    text-align: left;
+}
+
+/* Stylisation du label du menu déroulant */
+#filters label {
+    margin-right: 10px;
+    font-size: 16px;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Stylisation du menu déroulant */
+#filter-category {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 2px solid #ccc;
+    background-color: white;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    outline: none;
+}
+
+/* Effet au survol sur le menu déroulant */
+#filter-category:hover {
+    border-color: #888;
+}
+
+/* Stylisation des options dans le menu déroulant */
+#filter-category option {
+    padding: 10px;
+    background: white;
+    border-bottom: 1px solid #eee; /* Ajoute une ligne séparatrice entre les options */
+}
+
+/* Stylisation de l'option pour ajouter une nouvelle catégorie (s'il s'agit d'un choix) */
+#filter-category option[value="new"] {
+    background-color: #f9f9f9;
+    font-style: italic;
+}
+
+/* Ajoute un petit triangle vers le bas pour indiquer qu'il s'agit d'un menu déroulant */
+#filter-category {
+    appearance: none; /* Supprime l'apparence par défaut pour tous les navigateurs */
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2212%22%20height%3D%2212%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cpolygon%20fill%3D%22%23333%22%20points%3D%226%2C9%206%2C3%2011%2C6%22/%3E%3C/svg%3E');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px 12px;
+    padding-right: 30px; /* Ajuste le padding à droite pour faire de la place pour l'icône */
+}
+
+

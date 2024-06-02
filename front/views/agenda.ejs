@@ -1,0 +1,68 @@
+<%- include('partials/header', { title: 'GOOGOO Agenda' }) %>
+
+<header>
+    <h1>Agenda</h1>
+    <%- include('partials/nav') %>
+</header>
+<main>
+    <div id="filters">
+        <label for="filter-category">Filtrer par catégorie:</label>
+        <select id="filter-category">
+            <option value="all">Toutes les catégories</option>
+            <!-- Les options seront ajoutées dynamiquement ici -->
+        </select>
+    </div>
+    
+    <div id="month-navigation">
+        <button id="prev-month">&lt;</button>
+        <span id="month-name"></span>
+        <button id="next-month">&gt;</button>
+    </div>
+    <div id="weekdays">
+        <div>Lundi</div>
+        <div>Mardi</div>
+        <div>Mercredi</div>
+        <div>Jeudi</div>
+        <div>Vendredi</div>
+        <div>Samedi</div>
+        <div>Dimanche</div>
+    </div>
+    <div id="calendar"></div>
+
+
+    <div id="event_popup" class="popup">
+        <div class="popup-content">
+            <span class="close_button">&times;</span>
+            <form id="eventForm">
+                <label for="title">Titre:</label>
+                <input type="text" id="title" name="title" required>
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" required>
+                <label for="start_time">Heure de début:</label>
+                <input type="time" id="start_time" name="start_time">
+                <label for="end_time">Heure de fin:</label>
+                <input type="time" id="end_time" name="end_time">
+                <label for="category">Catégorie:</label>
+                <select name="category" id="category">
+                    <option value="">--Choisir une catégorie--</option>
+                    <option value="new">+ Ajouter une catégorie</option>
+                </select>
+                <label for="description">Description:</label>
+                <textarea id="description" name="description"></textarea>
+                <label for="groupe">groupe:</label>
+                <select name="groupe" id="groupe">
+                    <option value="">--Choisir un groupe--</option>
+                </select>
+                <label for="room">Salle:</label>
+                <select name="room" id="room">
+                    <option value="">--Choisir une salle--</option>
+                </select>
+                <button type="submit">Ajouter</button>
+            </form>  
+        </div>
+    </div>
+</main>
+
+<%- include('partials/footer') %>
+</body>
+</html>
